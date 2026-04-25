@@ -1,0 +1,497 @@
+/*
+  style.css — Dynamic To-Do List Stylesheet
+  Project  : TaskFlow
+  Author   : [Your Name]
+  Date     : April 25, 2026
+  Aesthetic: Warm paper-cream light theme with ink-black type,
+             bold serif display font, and tactile button interactions.
+             Clean, editorial, and highly readable.
+*/
+
+/* ====================================================
+   1. CSS CUSTOM PROPERTIES
+   ==================================================== */
+:root {
+  /* Color Palette */
+  --clr-bg:           #f5f0e8;        /* warm parchment background */
+  --clr-surface:      #fdfaf4;        /* card surface */
+  --clr-border:       #ddd5c4;        /* soft border */
+  --clr-border-dark:  #c5b99a;        /* stronger border on hover */
+  --clr-ink:          #1c1a16;        /* near-black for text */
+  --clr-ink-soft:     #6b6455;        /* secondary text */
+  --clr-ink-muted:    #a39a8a;        /* placeholder / muted */
+  --clr-accent:       #d4502a;        /* warm terracotta accent */
+  --clr-accent-hover: #b8401f;
+  --clr-accent-soft:  rgba(212, 80, 42, 0.1);
+  --clr-done:         #4a7c59;        /* earthy green for completed */
+  --clr-done-soft:    rgba(74, 124, 89, 0.1);
+  --clr-pending:      #c07a2a;        /* amber for pending */
+  --clr-error:        #c0392b;
+
+  /* Typography */
+  --font-display: Georgia, 'Times New Roman', serif;
+  --font-body:    'Trebuchet MS', 'Lucida Sans', sans-serif;
+
+  /* Spacing */
+  --space-xs:  0.35rem;
+  --space-sm:  0.7rem;
+  --space-md:  1.1rem;
+  --space-lg:  1.8rem;
+  --space-xl:  2.8rem;
+
+  /* Shape */
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+
+  /* Shadow */
+  --shadow-card: 0 2px 12px rgba(28, 26, 22, 0.08), 0 1px 3px rgba(28, 26, 22, 0.06);
+  --shadow-input: 0 0 0 3px rgba(212, 80, 42, 0.18);
+
+  /* Transition */
+  --t-fast:   0.15s ease;
+  --t-normal: 0.28s ease;
+}
+
+/* ====================================================
+   2. RESET & BASE
+   ==================================================== */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--clr-bg);
+  color: var(--clr-ink);
+  min-height: 100vh;
+  padding: var(--space-xl) var(--space-md);
+
+  /* Subtle dot-grid texture */
+  background-image: radial-gradient(circle, var(--clr-border) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Screen-reader only */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ====================================================
+   3. APP CONTAINER
+   ==================================================== */
+.app-container {
+  max-width: 600px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+/* ====================================================
+   4. HEADER
+   ==================================================== */
+.app-header {
+  background: var(--clr-surface);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg) var(--space-lg) var(--space-md);
+  box-shadow: var(--shadow-card);
+}
+
+.header-top {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-sm);
+}
+
+.header-icon {
+  font-size: 1.4rem;
+  color: var(--clr-accent);
+  line-height: 1;
+}
+
+.app-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 5vw, 2.4rem);
+  font-weight: 700;
+  color: var(--clr-ink);
+  letter-spacing: -0.5px;
+}
+
+.app-title .accent {
+  color: var(--clr-accent);
+}
+
+.app-description {
+  color: var(--clr-ink-soft);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin-bottom: var(--space-md);
+}
+
+/* Stats Bar */
+.stats-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: 0.82rem;
+  color: var(--clr-ink-muted);
+  border-top: 1px solid var(--clr-border);
+  padding-top: var(--space-sm);
+}
+
+.stat strong { color: var(--clr-ink); font-weight: 700; }
+.stat.pending strong { color: var(--clr-pending); }
+.stat.done strong    { color: var(--clr-done); }
+.stat-divider { color: var(--clr-border-dark); }
+
+/* ====================================================
+   5. INPUT SECTION
+   ==================================================== */
+.input-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.input-row {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+/* Text Input */
+.task-input {
+  flex: 1;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--clr-ink);
+  background: var(--clr-surface);
+  border: 1.5px solid var(--clr-border);
+  border-radius: var(--radius-md);
+  padding: 0.75rem 1rem;
+  outline: none;
+  transition: border-color var(--t-fast), box-shadow var(--t-fast);
+  box-shadow: var(--shadow-card);
+}
+
+.task-input::placeholder { color: var(--clr-ink-muted); }
+
+.task-input:focus {
+  border-color: var(--clr-accent);
+  box-shadow: var(--shadow-input);
+}
+
+/* Error Message */
+.error-msg {
+  font-size: 0.8rem;
+  color: var(--clr-error);
+  min-height: 1.2em;
+  padding-left: 0.3rem;
+  transition: opacity var(--t-fast);
+}
+
+/* ====================================================
+   6. BUTTONS
+   ==================================================== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 600;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background var(--t-fast), color var(--t-fast),
+              transform var(--t-fast), box-shadow var(--t-fast);
+  white-space: nowrap;
+}
+
+.btn:focus-visible { outline: 2px solid var(--clr-accent); outline-offset: 3px; }
+.btn:active        { transform: scale(0.96); }
+
+/* Add Task button */
+.btn-add {
+  background: var(--clr-accent);
+  color: #fff;
+  padding: 0.75rem 1.2rem;
+  box-shadow: 0 3px 10px rgba(212, 80, 42, 0.3);
+}
+.btn-add:hover { background: var(--clr-accent-hover); box-shadow: 0 4px 14px rgba(212, 80, 42, 0.4); }
+.btn-icon { font-size: 1.2rem; font-weight: 400; line-height: 1; }
+
+/* Ghost button (Clear Completed) */
+.btn-ghost {
+  background: transparent;
+  color: var(--clr-ink-muted);
+  border: 1px solid var(--clr-border);
+  padding: 0.5rem 1rem;
+  font-size: 0.82rem;
+}
+.btn-ghost:hover { color: var(--clr-error); border-color: var(--clr-error); background: rgba(192, 57, 43, 0.06); }
+
+/* Task action buttons (Edit / Delete) */
+.btn-edit {
+  background: transparent;
+  color: var(--clr-ink-muted);
+  border: 1px solid var(--clr-border);
+  padding: 0.3rem 0.7rem;
+  font-size: 0.78rem;
+  border-radius: var(--radius-sm);
+}
+.btn-edit:hover { color: var(--clr-accent); border-color: var(--clr-accent); background: var(--clr-accent-soft); }
+
+.btn-delete {
+  background: transparent;
+  color: var(--clr-ink-muted);
+  border: 1px solid var(--clr-border);
+  padding: 0.3rem 0.7rem;
+  font-size: 0.78rem;
+  border-radius: var(--radius-sm);
+}
+.btn-delete:hover { color: var(--clr-error); border-color: var(--clr-error); background: rgba(192, 57, 43, 0.06); }
+
+.btn-save {
+  background: var(--clr-done);
+  color: #fff;
+  padding: 0.3rem 0.8rem;
+  font-size: 0.78rem;
+  border-radius: var(--radius-sm);
+}
+.btn-save:hover { background: #3a6347; }
+
+.btn-cancel {
+  background: transparent;
+  color: var(--clr-ink-muted);
+  border: 1px solid var(--clr-border);
+  padding: 0.3rem 0.7rem;
+  font-size: 0.78rem;
+  border-radius: var(--radius-sm);
+}
+.btn-cancel:hover { background: var(--clr-bg); }
+
+/* ====================================================
+   7. FILTER BAR
+   ==================================================== */
+.filter-bar {
+  display: flex;
+  gap: var(--space-xs);
+  background: var(--clr-surface);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-md);
+  padding: 0.35rem;
+  box-shadow: var(--shadow-card);
+}
+
+.filter-btn {
+  flex: 1;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: var(--clr-ink-muted);
+  padding: 0.45rem 0.6rem;
+  cursor: pointer;
+  transition: background var(--t-fast), color var(--t-fast);
+  font-weight: 500;
+}
+
+.filter-btn:hover { color: var(--clr-ink); background: var(--clr-bg); }
+
+.filter-btn.active {
+  background: var(--clr-accent);
+  color: #fff;
+  font-weight: 600;
+}
+
+/* ====================================================
+   8. TASK LIST
+   ==================================================== */
+.task-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+/* ====================================================
+   9. TASK ITEM
+   ==================================================== */
+.task-item {
+  background: var(--clr-surface);
+  border: 1.5px solid var(--clr-border);
+  border-radius: var(--radius-md);
+  padding: 0.9rem 1rem;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  box-shadow: var(--shadow-card);
+  transition: border-color var(--t-normal), opacity var(--t-normal), transform var(--t-normal);
+  animation: slideIn 0.25s ease both;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.task-item:hover { border-color: var(--clr-border-dark); }
+
+/* Completed task styling */
+.task-item.completed {
+  border-color: var(--clr-done);
+  background: var(--clr-done-soft);
+  opacity: 0.85;
+}
+
+/* Checkbox (Bonus Task 6) */
+.task-checkbox {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--clr-border-dark);
+  border-radius: 4px;
+  flex-shrink: 0;
+  margin-top: 1px;
+  cursor: pointer;
+  position: relative;
+  transition: background var(--t-fast), border-color var(--t-fast);
+  background: var(--clr-bg);
+}
+
+.task-checkbox:checked {
+  background: var(--clr-done);
+  border-color: var(--clr-done);
+}
+
+.task-checkbox:checked::after {
+  content: '✓';
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Task text */
+.task-text-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  min-width: 0;
+}
+
+.task-text {
+  font-size: 0.95rem;
+  color: var(--clr-ink);
+  line-height: 1.5;
+  word-break: break-word;
+  transition: color var(--t-fast), text-decoration var(--t-fast);
+}
+
+/* Strikethrough for completed (Bonus Task 6) */
+.task-item.completed .task-text {
+  text-decoration: line-through;
+  color: var(--clr-ink-muted);
+}
+
+/* Timestamp */
+.task-timestamp {
+  font-size: 0.72rem;
+  color: var(--clr-ink-muted);
+}
+
+/* Edit Input (inline) */
+.task-edit-input {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--clr-ink);
+  background: var(--clr-bg);
+  border: 1.5px solid var(--clr-accent);
+  border-radius: var(--radius-sm);
+  padding: 0.35rem 0.6rem;
+  width: 100%;
+  outline: none;
+  box-shadow: var(--shadow-input);
+}
+
+/* Action buttons wrapper */
+.task-actions {
+  display: flex;
+  gap: var(--space-xs);
+  flex-shrink: 0;
+  align-items: flex-start;
+  padding-top: 1px;
+}
+
+/* ====================================================
+  10. EMPTY STATE
+   ==================================================== */
+.empty-state {
+  display: none;  /* shown by JS when list is empty */
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-xl) var(--space-md);
+  color: var(--clr-ink-muted);
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.empty-state.visible { display: flex; }
+
+.empty-icon {
+  font-size: 2.5rem;
+  opacity: 0.5;
+}
+
+/* ====================================================
+  11. FOOTER
+   ==================================================== */
+.app-footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* ====================================================
+  12. HIDDEN UTILITY
+   ==================================================== */
+.hidden { display: none !important; }
+
+/* ====================================================
+  13. RESPONSIVE
+   ==================================================== */
+@media (max-width: 480px) {
+  body { padding: var(--space-lg) var(--space-sm); }
+
+  .input-row { flex-direction: column; }
+  .btn-add   { justify-content: center; }
+
+  .task-actions { flex-direction: column; }
+
+  .app-header { padding: var(--space-md); }
+}

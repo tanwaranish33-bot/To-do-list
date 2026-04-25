@@ -1,0 +1,102 @@
+<!--
+  Project Title : Dynamic To-Do List Application
+  Author        : [Your Name]
+  Date          : April 25, 2026
+  Description   : A fully interactive to-do list built with HTML5, CSS3,
+                  and vanilla JavaScript. Supports adding, editing, deleting,
+                  and marking tasks as complete. Includes task counters and
+                  a clean, modern interface.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dynamic To-Do List</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div class="app-container">
+
+    <!-- ===== Header ===== -->
+    <header class="app-header">
+      <div class="header-top">
+        <span class="header-icon">✦</span>
+        <h1 class="app-title">Task<span class="accent">Flow</span></h1>
+      </div>
+      <p class="app-description">
+        Capture your tasks, check them off, and stay on top of your day.
+        Add anything — edit anytime — delete when done.
+      </p>
+
+      <!-- Task Counter (Bonus Task 6) -->
+      <div class="stats-bar" aria-live="polite">
+        <span class="stat">
+          <strong id="total-count">0</strong> total
+        </span>
+        <span class="stat-divider">·</span>
+        <span class="stat pending">
+          <strong id="pending-count">0</strong> pending
+        </span>
+        <span class="stat-divider">·</span>
+        <span class="stat done">
+          <strong id="done-count">0</strong> completed
+        </span>
+      </div>
+    </header>
+
+    <!-- ===== Input Section ===== -->
+    <section class="input-section" aria-label="Add a new task">
+      <div class="input-row">
+        <label for="task-input" class="sr-only">New task</label>
+        <input
+          type="text"
+          id="task-input"
+          class="task-input"
+          placeholder="What needs to be done?"
+          maxlength="200"
+          autocomplete="off"
+          aria-label="Enter task description"
+        />
+        <button id="add-btn" class="btn btn-add" aria-label="Add task">
+          <span class="btn-icon">+</span>
+          <span>Add Task</span>
+        </button>
+      </div>
+      <!-- Validation error message -->
+      <p id="error-msg" class="error-msg" role="alert" aria-live="assertive"></p>
+    </section>
+
+    <!-- ===== Filter Tabs ===== -->
+    <nav class="filter-bar" aria-label="Filter tasks">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="pending">Pending</button>
+      <button class="filter-btn" data-filter="completed">Completed</button>
+    </nav>
+
+    <!-- ===== Task List ===== -->
+    <main>
+      <ul id="task-list" class="task-list" aria-label="Task list">
+        <!-- Tasks are injected here by script.js -->
+      </ul>
+
+      <!-- Empty state -->
+      <div id="empty-state" class="empty-state" aria-live="polite">
+        <span class="empty-icon">🗒️</span>
+        <p>No tasks yet. Add one above!</p>
+      </div>
+    </main>
+
+    <!-- ===== Footer ===== -->
+    <footer class="app-footer">
+      <button id="clear-completed-btn" class="btn btn-ghost">
+        Clear Completed
+      </button>
+    </footer>
+
+  </div><!-- /.app-container -->
+
+  <script src="script.js" defer></script>
+</body>
+</html>
